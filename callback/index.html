@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>iHealth authorisation — Pete’s BP to Garmin</title>
+  <style>
+    body {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 0 20px;
+      font-family: system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    textarea {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 140px;
+      padding: 12px;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pete’s BP to Garmin</h1>
+  <p id="message"></p>
+  <textarea id="response" readonly hidden
+    aria-label="Authorisation response"></textarea>
+  <p>Keep this response private. Return to the local setup
+     on your PC to complete authorisation.</p>
+
+  <script>
+    const parameters = new URLSearchParams(location.search);
+    const response = document.getElementById("response");
+    const message = document.getElementById("message");
+
+    if (parameters.has("code")) {
+      message.textContent =
+        "Authorisation response received. Copy the text below into the local setup when prompted.";
+      response.value = location.href;
+      response.hidden = false;
+    } else if (parameters.has("error")) {
+      message.textContent =
+        "iHealth returned an authorisation error: " +
+        parameters.get("error");
+    } else {
+      message.textContent =
+        "The callback page is ready. Start authorisation from the local setup on your PC.";
+    }
+
+    if (location.search || location.hash) {
+      history.replaceState(null, "", location.pathname);
+    }
+  </script>
+</body>
+</html>
